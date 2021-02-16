@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static br.ufpb.dcx.apps4society.educapi.CoreTest.contentType;
 import static br.ufpb.dcx.apps4society.educapi.CoreTest.urlAPI;
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.is;
 
 public class UsersTest {
@@ -21,14 +22,16 @@ public class UsersTest {
     public void createAnUser() {
         UsersBuilder users = new UsersBuilder();
 
-        String json = users.aUser().withValidName()
+        String json = users
+                .aUser()
+                .withValidName()
                 .build();
-        System.out.println(json);
+
         given().header("Content-Type", contentType)
                 .body(json)
                 .when().post(urlTest)
                 .then().assertThat()
-                .statusCode(201)
+                .statusCode(SC_CREATED)
                 .body("id", is(users.id), "name", is(users.name),
                         "email", is(users.email), "password", is(users.password));
     }

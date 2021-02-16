@@ -7,10 +7,10 @@ import java.util.Random;
 public class UsersBuilder {
     public String name = "TestName" + new Random().nextInt(100);
     public String email = "mail@test.com";
+    public String uncreatedEmail = "uncreated mail@test.com";
     public String password = "vpassword";
     public Integer id = 2;
     private final JSONObject user = new JSONObject();
-
     public UsersBuilder aUser() {
         user.put("email", email);
         user.put("password", password);
@@ -27,6 +27,11 @@ public class UsersBuilder {
         user.put("id", id);
         return this;
     }
+
+    public UsersBuilder withUncreatedEmail() {
+        user.put("email", uncreatedEmail);
+        return this;
+    };
 
     public String build() {
         return user.toString();
