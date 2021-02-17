@@ -10,7 +10,9 @@ public class UsersBuilder {
     public String uncreatedEmail = "uncreated mail@test.com";
     public String password = "vpassword";
     public Integer id = 2;
+
     private final JSONObject user = new JSONObject();
+
     public UsersBuilder aUser() {
         user.put("email", email);
         user.put("password", password);
