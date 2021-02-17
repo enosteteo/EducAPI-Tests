@@ -3,17 +3,17 @@ package br.ufpb.dcx.apps4society.educapi;
 import br.ufpb.dcx.apps4society.educapi.JSONBuilder.UsersBuilder;
 import io.restassured.RestAssured;
 import io.restassured.response.ValidatableResponse;
+import org.junit.jupiter.api.Assertions;
 
 import static io.restassured.RestAssured.*;
-import static io.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.Matchers.*;
 
 public class CoreTest {
     protected static String token;
-    protected static String urlBase = "http://localhost:8080/";
-    protected static String contentType = "application/json";
-    protected static String urlAPI = urlBase + "v1/api/";
+    public static String urlBase = "http://localhost:8080/";
+    public static String contentType = "application/json";
+    public static String urlAPI = urlBase + "v1/api/";
 
     public static void setUp(String path) {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -22,7 +22,7 @@ public class CoreTest {
         basePath = "/v1/api" + path;
     }
 
-    public static void login(){
+    public static void login() {
         String validUser = new UsersBuilder().aUser().build();
         token = given().header("Content-Type", contentType).body(validUser)
                 .when().post()
@@ -30,7 +30,7 @@ public class CoreTest {
                 .statusCode(SC_OK).body("token", notNullValue()).extract().path("token");
     }
 
-    static ValidatableResponse postSample(String json, Integer statusCode) {
+    public static ValidatableResponse postSample(String json, Integer statusCode) {
         return given().header("Content-Type", contentType)
                 .body(json)
                 .when().post()
@@ -38,6 +38,35 @@ public class CoreTest {
                 .statusCode(statusCode);
     }
 
+    public static ValidatableResponse postSample(String json, String uri) {
+        return given().header("Content-Type", contentType)
+                .body(json)
+                .when().post(uri)
+                .then().assertThat();
+    }
+
+    public static void createUserWithUnicEmail() {
+        String json = new UsersBuilder()
+                .aUser()
+                .withUnicEmail()
+                .withValidName()
+                .build();
+
+        String usersUri = urlAPI + "users/";
+        int code = postSample(json, usersUri)
+                .extract().statusCode();
+        userIsCreated(code);
+    }
+
+    private static void userIsCreated(int code) {
+        boolean created = false;
+        if(code == SC_CREATED) {
+            created = true;
+        } else if (code == SC_NO_CONTENT) {
+            created = true;
+        }
+        Assertions.assertTrue(created);
+    }
 
 
 //

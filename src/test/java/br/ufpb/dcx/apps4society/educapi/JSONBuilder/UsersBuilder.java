@@ -6,8 +6,7 @@ import java.util.Random;
 
 public class UsersBuilder {
     public String name = "TestName" + new Random().nextInt(100);
-    public String email = "mail@test.com";
-    public String uncreatedEmail = "uncreated mail@test.com";
+    public String email = generateEmail();
     public String password = "vpassword";
     public Integer id = 2;
 
@@ -31,11 +30,24 @@ public class UsersBuilder {
     }
 
     public UsersBuilder withUncreatedEmail() {
-        user.put("email", uncreatedEmail);
+        user.put("email", generateEmail());
         return this;
     };
 
+    public UsersBuilder withUnicEmail() {
+        user.put("email", "createdUser@mail.com");
+        return this;
+    }
+
     public String build() {
         return user.toString();
+    }
+
+    public String generateEmail() {
+        String pt1 = "pt1" + new Random().nextInt(999);
+        String pt2 = "m2" + new Random().nextInt(99);
+        String pt3 = "a3d" + new Random().nextInt(9999);
+        String mail = pt1 + pt2 + pt3 + "@mail.com";
+        return mail;
     }
 }
