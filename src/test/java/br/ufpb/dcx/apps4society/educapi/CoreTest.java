@@ -15,7 +15,7 @@ public class CoreTest {
     protected static String contentType = "application/json";
     protected static String urlAPI = urlBase + "v1/api/";
 
-    public static void setUp(Object path) {
+    public static void setUp(String path) {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         baseURI = "http://localhost:8080";
         port = 8080;
@@ -30,7 +30,7 @@ public class CoreTest {
                 .statusCode(SC_OK).body("token", notNullValue()).extract().path("token");
     }
 
-    static ValidatableResponse post(String json, Integer statusCode) {
+    static ValidatableResponse postSample(String json, Integer statusCode) {
         return given().header("Content-Type", contentType)
                 .body(json)
                 .when().post()
@@ -39,4 +39,40 @@ public class CoreTest {
     }
 
 
+
+//
+//
+//    protected static JSONObject postJson;
+//    protected static JSONObject pathJson;
+//
+//    public static void testGet(int getStatusCode, String itemPath,String item){
+//        given().headers("Authorization", token, "Content-Type", contentType)
+//                .when().get(urlBase)
+//                .then().statusCode(getStatusCode).body(itemPath,hasItem(item));
+//    }
+//
+//    public static void testPost(int postStatusCode, JSONObject postJson){
+//        given().headers("Authorization", token, "Content-Type", contentType)
+//                .body(postJson).post(urlBase)
+//                .then()
+//                .assertThat().statusCode(postStatusCode);
+//    }
+//
+//    public static void testPath(int pathStatusCode, JSONObject pathJson, String pathIndex){
+//
+//        given()
+//                .headers("Authorization", token,"Content-Type", contentType)
+//                .body(pathJson)
+//                .patch(urlBase + pathIndex)
+//                .then()
+//                .assertThat()
+//                .statusCode(pathStatusCode);
+//    }
+//
+//    public static void testDelete(int deleteStatusCode,String deletePath){
+//
+//        given().headers("Authorization", token, "Content-Type", contentType)
+//                .delete(urlBase + deletePath)
+//                .then().assertThat().statusCode(deleteStatusCode);
+//    }
 }
