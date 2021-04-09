@@ -5,7 +5,7 @@ import br.ufpb.dcx.apps4society.educapi.JSONBuilder.UsersBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static br.ufpb.dcx.apps4society.educapi.CoreTest.postSample;
+import static br.ufpb.dcx.apps4society.educapi.CoreTest.postWithJsonAndExpectHttpCode;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.notNullValue;
@@ -23,7 +23,7 @@ public class LoginTest {
 
         String json = new UsersBuilder()
                 .aUser().withUnicEmail().build();
-        postSample(json, SC_OK).body("token", notNullValue());
+        postWithJsonAndExpectHttpCode(json, SC_OK).body("token", notNullValue());
     }
 
     @Test
@@ -31,6 +31,6 @@ public class LoginTest {
         String json = new UsersBuilder()
                 .aUser()
                 .withUncreatedEmail().build();
-        postSample(json, SC_UNAUTHORIZED);
+        postWithJsonAndExpectHttpCode(json, SC_UNAUTHORIZED);
     }
 }

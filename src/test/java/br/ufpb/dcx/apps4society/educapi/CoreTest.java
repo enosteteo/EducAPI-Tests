@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.*;
 
 public class CoreTest {
     protected static String token;
+
     public static String urlBase = "http://localhost:8080/";
     public static String contentType = "application/json";
     public static String urlAPI = urlBase + "v1/api/";
@@ -22,15 +23,24 @@ public class CoreTest {
         basePath = "/v1/api" + path;
     }
 
-    public static void login() {
-        String validUser = new UsersBuilder().aUser().build();
-        token = given().header("Content-Type", contentType).body(validUser)
-                .when().post()
+    public static void login(String json) {
+        token = given().header("Content-Type", contentType).body(json)
+                .when().post("auth/login")
                 .then().assertThat()
                 .statusCode(SC_OK).body("token", notNullValue()).extract().path("token");
     }
+    public String getToken(String user) {
+        login(user);
+        return token;
+    }
 
-    public static ValidatableResponse postSample(String json, Integer statusCode) {
+    public static void createAnUser(String userJson) {
+        int code = postWithJsonAndUri(userJson, "users/")
+                .extract().statusCode();
+        userIsCreated(code);
+    }
+
+    public static ValidatableResponse postWithJsonAndExpectHttpCode(String json, Integer statusCode) {
         return given().header("Content-Type", contentType)
                 .body(json)
                 .when().post()
@@ -38,10 +48,10 @@ public class CoreTest {
                 .statusCode(statusCode);
     }
 
-    public static ValidatableResponse postSample(String json, String uri) {
+    public static ValidatableResponse postWithJsonAndUri(String json, String uriRequest) {
         return given().header("Content-Type", contentType)
                 .body(json)
-                .when().post(uri)
+                .when().post(uriRequest)
                 .then().assertThat();
     }
 
@@ -53,7 +63,7 @@ public class CoreTest {
                 .build();
 
         String usersUri = urlAPI + "users/";
-        int code = postSample(json, usersUri)
+        int code = postWithJsonAndUri(json, usersUri)
                 .extract().statusCode();
         userIsCreated(code);
     }
